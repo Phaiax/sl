@@ -1,5 +1,3 @@
-#![feature(uniform_paths)]
-
 
 use rspotify::spotify::client::Spotify;
 use rspotify::spotify::util::get_token;
@@ -149,7 +147,7 @@ fn get_current_song(spotify : &mut Spotify) -> Result<Option<SongInfo>, Error> {
             // e is a failure::Error
             match e.downcast_ref()
                    .and_then(|e : &reqwest::Error | e.get_ref() )
-                   .and_then(|e : &(dyn std::error::Error + Send + Sync) | e.downcast_ref())
+                   .and_then(|e : &(dyn std::error::Error + Send + Sync + 'static) | e.downcast_ref())
                    .and_then(|e : &std::io::Error | e.raw_os_error() ) {
                 Some(10054) => {
                     std::mem::replace(spotify, connect_to_spotify()?);
